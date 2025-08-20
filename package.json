@@ -1,0 +1,38 @@
+{
+  "name": "playwright_ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "runCommand": "npm run regression ",
+    "runall": "npx playwright test --reporter=line,allure-playwright",
+    "regression": "npx playwright test tests/Placeorder.spec.js --headed --reporter=line,allure-playwright",
+    "webTests": "npx playwright test --grep '@web' --reporter=line,allure-playwright",
+    "safariNewconfig": "npx playwright test --config playwright.config1.js --project=safari --reporter=line,allure-playwright",
+    "chromeNewconfig": "npx playwright test --config playwright.config1.js --project=chrome --reporter=line,allure-playwright",
+    "cucumberRegression": "npx cucumber-js --tags '@Regression' --retry 1 --exit --format html:cucumber-report.html",
+    "docker": "cross-env docker-compose up --build playwright-tests",
+    "docker:rerun": "cross-env docker-compose up playwright-tests",
+    "docker:firefox": "cross-env PLAYWRIGHT_BROWSER=firefox PLAYWRIGHT_HEADLESS=true PLAYWRIGHT_REPORTER=line docker-compose up --build playwright-custom",
+    "docker:rerun-firefox": "cross-env PLAYWRIGHT_BROWSER=firefox PLAYWRIGHT_HEADLESS=true PLAYWRIGHT_REPORTER=line docker-compose up playwright-custom",
+    "docker:safari": "cross-env PLAYWRIGHT_BROWSER=safari PLAYWRIGHT_HEADLESS=true PLAYWRIGHT_REPORTER=allure-playwright docker-compose up --build playwright-custom",
+    "docker:rerun-safari": "cross-env PLAYWRIGHT_BROWSER=safari PLAYWRIGHT_HEADLESS=true PLAYWRIGHT_REPORTER=allure-playwright docker-compose up playwright-custom",
+    "generate:testSetup": "node ./generateTestSetup.mjs",
+    "watch:testSetup": "node ./generateTestSetup.mjs --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.54.1",
+    "@types/node": "^24.1.0",
+    "allure-playwright": "^3.3.2",
+    "cross-env": "^10.0.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^9.9.0",
+    "csv": "^6.4.1",
+    "dotenv": "^17.2.1"
+  }
+}

@@ -1,0 +1,56 @@
+trigger:
+  - master
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  buildConfiguration: "Release"
+
+schedules:
+  # Run every 12 hours during weekdays
+  - cron: "0 */12 * * 1-5"
+    displayName: Run every 12 hours weekdays
+    always: "true"
+    branches:
+      include:
+        - master
+
+  # Additional schedule for midnight (12 AM) every day
+  # - cron: "0 0 * * *"
+  #   displayName: Midnight daily run
+  #   always: "true"
+  #   branches:
+  #     include:
+  #       - master
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "22.x"
+    displayName: "Install Node.js"
+
+  - script: npm ci
+    displayName: "Install dependencies"
+
+  - script: npx playwright install --with-deps
+    displayName: "Install Playwright browsers"
+
+  - script: npx playwright test
+    displayName: "Run Playwright tests"
+    env:
+      PASSWORD: $(PASSWORD)
+      USER: $(USER)
+      # Add any other secrets or env vars here
+
+  - script: |
+      npm install -g allure-commandline
+      npx allure generate ./allure-results --clean -o ./allure-report
+    displayName: "Generate Allure report"
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "allure-report"
+      ArtifactName: "allure-report"
+      publishLocation: "Container"
+    displayName: "Publish Allure report artifact"

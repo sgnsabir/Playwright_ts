@@ -1,0 +1,30 @@
+services:
+  playwright-chrome:
+    build: .
+    container_name: playwright-chrome
+    environment:
+      - NODE_ENV=development
+    command: sh -c "npx playwright test --project=chrome --workers=4 && allure generate allure-results --clean -o allure-report && allure open allure-report --port 5000 --host 0.0.0.0"
+    volumes:
+      - .:/app
+    ports:
+      - "5000:5000"
+
+  # Uncomment and configure for more parallelism or sharding
+  # playwright-chrome-shard1:
+  #   build: .
+  #   container_name: playwright-chrome-shard1
+  #   environment:
+  #     - NODE_ENV=development
+  #   command: npx playwright test --project=chrome --shard=1/2
+  #   volumes:
+  #     - .:/app
+  #
+  # playwright-chrome-shard2:
+  #   build: .
+  #   container_name: playwright-chrome-shard2
+  #   environment:
+  #     - NODE_ENV=development
+  #   command: npx playwright test --project=chrome --shard=2/2
+  #   volumes:
+  #     - .:/app
