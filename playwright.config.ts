@@ -10,6 +10,9 @@ export default defineConfig({
   workers: 3,
 
   reporter: [["line"], ["allure-playwright"]],
+  use: {
+    baseURL: process.env.BASE_URL || "https://automationexercise.com/",
+  },
   //["html"] currently not require
   projects: [
     // Chromium

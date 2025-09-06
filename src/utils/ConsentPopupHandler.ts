@@ -2,28 +2,28 @@
 import { Locator, Page } from "@playwright/test";
 
 export class ConsentPopupHandler {
-  private popup: Locator;
-  private acceptButton: Locator;
+  private readonly consentPopup: Locator;
+  private readonly acceptButton: Locator;
 
   constructor(private readonly page: Page) {
-    // this.popup = page.locator(".fc-footer-buttons");
-    this.acceptButton = page.locator("button.fc-cta-consent");
+    this.consentPopup = this.page.locator(".fc-consent-root");
+    this.acceptButton = this.page.locator("button.fc-cta-consent");
   }
 
   async handle() {
     try {
-      // Wait for the popup container to be visible
-      if (await this.acceptButton.isVisible({ timeout: 3000 })) {
+      await this.consentPopup.waitFor({ state: "visible", timeout: 5000 });
+      if (await this.acceptButton.isVisible()) {
         console.log("Consent popup found. Accepting...");
-
-        // Click using the label text for reliability
         await this.acceptButton.click();
-
-        // Verify closure instead of waiting arbitrarily
-        await this.acceptButton.waitFor({ state: "hidden", timeout: 3000 });
+        await this.consentPopup.waitFor({ state: "hidden", timeout: 3000 });
       }
     } catch (error) {
-      console.error("Consent handling failed:", error);
+      if (error.message.includes("timeout")) {
+        console.log("Consent popup did not appear within the timeout.");
+      } else {
+        console.error("Consent handling failed:", error);
+      }
     }
   }
 }

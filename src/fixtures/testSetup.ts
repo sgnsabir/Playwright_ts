@@ -47,23 +47,11 @@ type PageFixtures = {
 
 export const test = baseTest.extend<PageFixtures>({
   page: async ({ page }, use) => {
+    await page.goto("/");
     const consentHandler = new ConsentPopupHandler(page);
-
-    const handleConsent = async () => {
-      try {
-        await consentHandler.handle();
-      } catch (error) {
-        console.log("Consent handling skipped:", error);
-      }
-    };
-
-    page.on("load", handleConsent);
-    page.on("domcontentloaded", handleConsent);
-
+    await consentHandler.handle();
     await use(page);
-
-    page.off("load", handleConsent);
-    page.off("domcontentloaded", handleConsent);
+    await page.context().clearCookies();
   },
 
   accountCreatedPage: async ({ page }, use) => await use(new AccountCreatedPage(page)),

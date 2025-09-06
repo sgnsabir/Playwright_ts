@@ -18,6 +18,6 @@ test.describe("End to End Registration flow testing", () => {
     await signupPage.fillZipCodeField("12345");
     await signupPage.fillMobileNumberField("123456789");
 
-    await page.pause();
+    //we need to write all the test in the similar way, it's just an example.
   });
 });
